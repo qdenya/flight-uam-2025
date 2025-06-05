@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { earthGroup } from "./globe.js";
 
+const cityMarkers = [];
+
 function latLonToVec3(lat, lon, radius = 5.05) {
     const phi = (90 - lat) * (Math.PI / 180);
     const theta = (lon + 180) * (Math.PI / 180);
@@ -19,7 +21,8 @@ function addCityMarker(lat, lon, color = 0xff0000) {
     );
     marker.position.copy(pos);
     earthGroup.add(marker);
+    cityMarkers.push(marker);
     return pos;
 }
 
-export { latLonToVec3, addCityMarker }; 
+export { latLonToVec3, addCityMarker, cityMarkers }; 

@@ -30,7 +30,8 @@ function createFlight(fromVec, toVec, color = 0xffff00) {
     const curve = new THREE.CatmullRomCurve3(arcPoints);
     const tube = new THREE.TubeGeometry(curve, 100, 0.03, 8, false);
     const material = new THREE.MeshBasicMaterial({ color });
-    earthGroup.add(new THREE.Mesh(tube, material));
+    const tubeMesh = new THREE.Mesh(tube, material);
+    earthGroup.add(tubeMesh);
 
     const frames = [];
     let up = new THREE.Vector3(0, 1, 0);
@@ -78,6 +79,9 @@ function createFlight(fromVec, toVec, color = 0xffff00) {
         frames,
         progress: Math.random(),
         steps,
+        speed: 0.002,
+        visible: true,
+        tube: tubeMesh
     });
 }
 
