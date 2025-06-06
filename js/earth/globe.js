@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { scene } from "../core/scene.js";
-
+import { createClouds } from './clouds.js';
 import { createAtmosphere } from '../earth/atmosphereShader.js';
 
 const earthGroup = new THREE.Group();
@@ -59,4 +59,7 @@ earthGroup.add(globe);
 const atmosphere = createAtmosphere();
 earthGroup.add(atmosphere);
 
-export { earthGroup, atmosphere }; 
+const clouds = createClouds();
+earthGroup.add(clouds);
+
+export { earthGroup, atmosphere, clouds }; 

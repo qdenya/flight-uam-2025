@@ -1,24 +1,31 @@
 import * as THREE from "three";
-import { controls, renderer, scene, camera, sunLight,  } from "../core/scene.js";
+import { controls, renderer, scene, camera, sunLight } from "../core/scene.js";
 import { flights } from "../flight/flight.js";
 import { controls as guiControls } from "../ui/gui.js";
-import { earthGroup, globeMaterial, atmosphere } from "../earth/globe.js";
+import {
+    earthGroup,
+    globeMaterial,
+    atmosphere,
+    clouds,
+} from "../earth/globe.js";
 
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
 
-    atmosphere.material.uniforms.lightDirection.value.copy(globeMaterial.uniforms.lightDirection.value);
+    atmosphere.material.uniforms.lightDirection.value.copy(
+        globeMaterial.uniforms.lightDirection.value
+    );
 
     if (guiControls.autoRotate) {
         earthGroup.rotation.y += guiControls.rotationSpeed * 0.01;
     }
 
-    const baseSun = new THREE.Vector3(1, 1.2, 1); 
+    const baseSun = new THREE.Vector3(1, 1.2, 1);
     const combinedRotation = earthGroup.rotation.y + guiControls.sunRotation;
-    const rotatedSun = baseSun.clone().applyAxisAngle(
-        new THREE.Vector3(0, 1, 0), -combinedRotation
-    );
+    const rotatedSun = baseSun
+        .clone()
+        .applyAxisAngle(new THREE.Vector3(0, 1, 0), -combinedRotation);
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(10));
 
@@ -38,9 +45,9 @@ function animate() {
         );
         flight.plane.setRotationFromMatrix(matrix);
     });
+    clouds.rotation.y += 0.0003;
 
     renderer.render(scene, camera);
 }
-
 
 export { animate };
