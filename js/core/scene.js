@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createSkybox } from './skybox.js';
 
+
 const scene = new THREE.Scene();
 scene.background = createSkybox();
 const camera = new THREE.PerspectiveCamera(
@@ -22,6 +23,9 @@ controls.enablePan = true;
 const sunLight = new THREE.DirectionalLight(0xffffff, 3); 
 sunLight.position.set(10, 10, 10); 
 scene.add(sunLight);
+
+
+
 
 function updateCameraPosition() {
     const width = window.innerWidth;
@@ -52,4 +56,4 @@ window.addEventListener('resize', () => {
     updateCameraPosition();
 });
 
-export { scene, camera, renderer, controls }; 
+export { scene, camera, renderer, controls, sunLight }; 

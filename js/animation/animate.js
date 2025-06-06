@@ -1,18 +1,18 @@
 import * as THREE from "three";
-import { controls, renderer, scene, camera } from "../core/scene.js";
+import { controls, renderer, scene, camera, sunLight,  } from "../core/scene.js";
 import { flights } from "../flight/flight.js";
 import { controls as guiControls } from "../ui/gui.js";
-import { earthGroup, globeMaterial } from "../earth/globe.js";
+import { earthGroup, globeMaterial, atmosphere } from "../earth/globe.js";
 
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
 
+    atmosphere.material.uniforms.lightDirection.value.copy(globeMaterial.uniforms.lightDirection.value);
+
     if (guiControls.autoRotate) {
         earthGroup.rotation.y += guiControls.rotationSpeed * 0.01;
     }
-
-    // const sunWorldDir = new THREE.Vector3(1, 0.2, 0); 
 
     const baseSun = new THREE.Vector3(1, 1.2, 1); 
     const combinedRotation = earthGroup.rotation.y + guiControls.sunRotation;
@@ -20,6 +20,7 @@ function animate() {
         new THREE.Vector3(0, 1, 0), -combinedRotation
     );
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
+    sunLight.position.copy(rotatedSun.multiplyScalar(10));
 
     flights.forEach((flight) => {
         if (!flight.visible) return;
@@ -40,5 +41,6 @@ function animate() {
 
     renderer.render(scene, camera);
 }
+
 
 export { animate };
