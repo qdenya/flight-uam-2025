@@ -25,11 +25,8 @@ Aplikacja edukacyjna 3D, która wizualizuje bezpośrednie połączenia lotnicze 
 ### Instalacja i uruchomienie
 
 ```bash
-# Zainstaluj Three.js
-npm install --save three
-
-# Zainstaluj Vite (do lokalnego serwera i bundlingu)
-npm install --save-dev vite
+# Zainstaluj dependencies
+npm install 
 
 # Uruchom
 npx vite

@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { createSkybox } from './skybox.js';
 
 const scene = new THREE.Scene();
-
-scene.background = new THREE.Color(0x000000);
+scene.background = createSkybox();
 const camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
@@ -32,7 +32,7 @@ function updateCameraPosition() {
         camera.position.set(0, 10, 20);  
         controls.minDistance = 10;
         controls.maxDistance = 30;
-    } else { // Десктоп
+    } else { 
         camera.position.set(0, 8, 15);  
         controls.minDistance = 12;
         controls.maxDistance = 40;
