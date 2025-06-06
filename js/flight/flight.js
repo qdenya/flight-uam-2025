@@ -8,7 +8,7 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
     const routePoints = customPoints || generateIntermediatePoints(fromVec, toVec, 10);
     const curve = createCurveFromPoints(routePoints);
     
-    const tube = new THREE.TubeGeometry(curve, 100, 0.01, 8, false);
+    const tube = new THREE.TubeGeometry(curve, 100, 0.02, 8, false);
     const material = new THREE.MeshBasicMaterial({ color });
     const tubeMesh = new THREE.Mesh(tube, material);
     earthGroup.add(tubeMesh);
