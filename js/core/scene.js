@@ -19,6 +19,10 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = true;
 
+const sunLight = new THREE.DirectionalLight(0xffffff, 3); 
+sunLight.position.set(10, 10, 10); 
+scene.add(sunLight);
+
 function updateCameraPosition() {
     const width = window.innerWidth;
     

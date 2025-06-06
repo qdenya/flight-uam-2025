@@ -11,6 +11,8 @@ class Controls {
         this.cameraDistance = 12;
         this.rotationSpeed = 0.5;
         this.autoRotate = false;
+        this.sunRotation = 0; 
+
     }
 }
 
@@ -30,6 +32,8 @@ mainFolder.add(controls, 'cameraDistance', 6, 50).name('Odległość kamery').on
 
 mainFolder.add(controls, 'rotationSpeed', 0, 2).name('Prędkość obrotu');
 mainFolder.add(controls, 'autoRotate').name('Auto obrót');
+mainFolder.add(controls, 'sunRotation', -Math.PI, Math.PI).name('Pozycja Słońca');
+
 
 const displayFolder = gui.addFolder('Wyświetlanie');
 displayFolder.add(controls, 'showCities').name('Pokaż miasta').onChange((value) => {
