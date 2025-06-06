@@ -16,7 +16,7 @@ function latLonToVec3(lat, lon, radius = 5.05) {
 function addCityMarker(lat, lon, color = 0xff0000) {
     const pos = latLonToVec3(lat, lon);
     const marker = new THREE.Mesh(
-        new THREE.SphereGeometry(0.08, 8, 8),
+        new THREE.SphereGeometry(0.04, 8, 8),
         new THREE.MeshBasicMaterial({ color })
     );
     marker.position.copy(pos);

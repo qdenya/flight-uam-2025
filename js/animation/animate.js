@@ -20,10 +20,11 @@ function animate() {
         const idx = Math.floor(flight.progress * flight.steps);
         const frame = flight.frames[idx];
         flight.plane.position.copy(frame.point);
+        
         const matrix = new THREE.Matrix4().makeBasis(
-            frame.normal,
-            frame.binormal,
-            frame.tangent
+            frame.binormal,    
+            frame.tangent,     
+            frame.normal      
         );
         flight.plane.setRotationFromMatrix(matrix);
     });

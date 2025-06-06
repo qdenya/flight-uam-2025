@@ -1,71 +1,42 @@
 import * as THREE from "three";
 import { earthGroup } from "../earth/globe.js";
+import { generateIntermediatePoints, createCurveFromPoints } from "./routeGenerator.js";
 
 const flights = [];
 
-function createFlight(fromVec, toVec, color = 0xffff00) {
-    const arcPoints = [];
-    const baseRadius = 5.05;
-    const peakRadius = 5.2;
-    const steps = 200;
-
-    const omega = Math.acos(
-        fromVec.clone().normalize().dot(toVec.clone().normalize())
-    );
-    const sinOmega = Math.sin(omega);
-
-    for (let i = 0; i <= steps; i++) {
-        const t = i / steps;
-        const p = fromVec
-            .clone()
-            .multiplyScalar(Math.sin((1 - t) * omega))
-            .add(toVec.clone().multiplyScalar(Math.sin(t * omega)))
-            .divideScalar(sinOmega);
-        const currentRadius =
-            baseRadius + (peakRadius - baseRadius) * Math.sin(Math.PI * t);
-        p.normalize().multiplyScalar(currentRadius);
-        arcPoints.push(p);
-    }
-
-    const curve = new THREE.CatmullRomCurve3(arcPoints);
-    const tube = new THREE.TubeGeometry(curve, 100, 0.03, 8, false);
+function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
+    const routePoints = customPoints || generateIntermediatePoints(fromVec, toVec, 10);
+    const curve = createCurveFromPoints(routePoints);
+    
+    const tube = new THREE.TubeGeometry(curve, 100, 0.01, 8, false);
     const material = new THREE.MeshBasicMaterial({ color });
     const tubeMesh = new THREE.Mesh(tube, material);
     earthGroup.add(tubeMesh);
 
     const frames = [];
-    let up = new THREE.Vector3(0, 1, 0);
+    const steps = 200;
+    
     for (let i = 0; i <= steps; i++) {
         const t = i / steps;
         const point = curve.getPointAt(t);
         const tangent = curve.getTangentAt(t).normalize();
-
-        if (i === 0) {
-            const normal = new THREE.Vector3()
-                .crossVectors(up, tangent)
-                .normalize();
-            const binormal = new THREE.Vector3()
-                .crossVectors(tangent, normal)
-                .normalize();
-            frames.push({ point, tangent, normal, binormal });
-        } else {
-            const prev = frames[i - 1];
-            const axis = new THREE.Vector3()
-                .crossVectors(prev.tangent, tangent)
-                .normalize();
-            const angle = Math.acos(
-                THREE.MathUtils.clamp(prev.tangent.dot(tangent), -1, 1)
-            );
-            const q = new THREE.Quaternion().setFromAxisAngle(axis, angle);
-            up.applyQuaternion(q);
-            const normal = new THREE.Vector3()
-                .crossVectors(up, tangent)
-                .normalize();
-            const binormal = new THREE.Vector3()
-                .crossVectors(tangent, normal)
-                .normalize();
-            frames.push({ point, tangent, normal, binormal });
-        }
+        
+        const normal = point.clone().normalize();
+        
+        const binormal = new THREE.Vector3()
+            .crossVectors(tangent, normal)
+            .normalize();
+        
+        const correctedNormal = new THREE.Vector3()
+            .crossVectors(binormal, tangent)
+            .normalize();
+        
+        frames.push({ 
+            point, 
+            tangent, 
+            normal: correctedNormal, 
+            binormal 
+        });
     }
 
     const plane = new THREE.Mesh(
@@ -73,16 +44,18 @@ function createFlight(fromVec, toVec, color = 0xffff00) {
         new THREE.MeshStandardMaterial({ color: 0xffffff })
     );
     earthGroup.add(plane);
-
-    flights.push({
+    const flight = {
         plane,
+        tube: tubeMesh,
         frames,
-        progress: Math.random(),
         steps,
+        progress: Math.random(),
         speed: 0.002,
-        visible: true,
-        tube: tubeMesh
-    });
+        visible: true
+    };
+    flights.push(flight);
+
+    return flight;
 }
 
 export { createFlight, flights }; 
