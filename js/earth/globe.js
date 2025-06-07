@@ -23,18 +23,15 @@ const earthRoughnessTexture = textureLoader.load(
 
 const globeGeometry = new THREE.SphereGeometry(5, 64, 64);
 
-// const shadowSphere = new THREE.Mesh(
-//     globeGeometry,
-//     new THREE.ShadowMaterial({
-//         opacity: 1.0,
-//     })
-// );
-// shadowSphere.receiveShadow = true;
-// shadowSphere.scale.set(1.005, 1.005, 1.005); // Чуть больше
-// или наоборот:
-// shadowSphere.scale.set(0.999, 0.999, 0.999);
-
-// earthGroup.add(shadowSphere);
+const shadowSphere = new THREE.Mesh(
+    globeGeometry,
+    new THREE.ShadowMaterial({
+        opacity: 0.3,
+    })
+);
+shadowSphere.receiveShadow = true;
+shadowSphere.scale.set(1.001, 1.001, 1.001);
+earthGroup.add(shadowSphere);
 
 export const globeMaterial = new THREE.ShaderMaterial({
     uniforms: {

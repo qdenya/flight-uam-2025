@@ -55,7 +55,7 @@ function updateCameraPosition() {
         controls.maxDistance = 30;
     } else {
         camera.position.set(0, 8, 15);
-        controls.minDistance = 12;
+        controls.minDistance = 2;
         controls.maxDistance = 40;
     }
 }
