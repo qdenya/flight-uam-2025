@@ -7,7 +7,7 @@ export function createAtmosphere() {
         uniforms: {
             lightDirection: { value: new THREE.Vector3(1, 1, 1).normalize() },
             atmosphereColor: { value: new THREE.Color(0x3399ff) },
-            intensity: { value: 0.5 }
+            intensity: { value: 0.9 }
         },
         vertexShader: `
             varying vec3 vNormal;

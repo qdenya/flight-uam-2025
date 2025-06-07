@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { createSkybox } from './skybox.js';
-
+import { createSkybox } from "./skybox.js";
 
 const scene = new THREE.Scene();
 scene.background = createSkybox();
@@ -20,28 +19,25 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = true;
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 3); 
-sunLight.position.set(10, 10, 10); 
+const sunLight = new THREE.DirectionalLight(0xffffff, 3);
+sunLight.position.set(10, 10, 10);
 scene.add(sunLight);
-
-
-
 
 function updateCameraPosition() {
     const width = window.innerWidth;
-    
-    if (width <= 600) { 
-        camera.position.set(0, 15, 20);  
+
+    if (width <= 600) {
+        camera.position.set(0, 15, 20);
         controls.minDistance = 8;
         controls.maxDistance = 15;
 
         scene.position.y = -4;
-    } else if (width <= 1024) { 
-        camera.position.set(0, 10, 20);  
+    } else if (width <= 1024) {
+        camera.position.set(0, 10, 20);
         controls.minDistance = 10;
         controls.maxDistance = 30;
-    } else { 
-        camera.position.set(0, 8, 15);  
+    } else {
+        camera.position.set(0, 8, 15);
         controls.minDistance = 12;
         controls.maxDistance = 40;
     }
@@ -49,11 +45,11 @@ function updateCameraPosition() {
 
 updateCameraPosition();
 
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    updateCameraPosition();
-});
+// window.addEventListener('resize', () => {
+//     camera.aspect = window.innerWidth / window.innerHeight;
+//     camera.updateProjectionMatrix();
+//     renderer.setSize(window.innerWidth, window.innerHeight);
+//     updateCameraPosition();
+// });
 
-export { scene, camera, renderer, controls, sunLight }; 
+export { scene, camera, renderer, controls, sunLight };
