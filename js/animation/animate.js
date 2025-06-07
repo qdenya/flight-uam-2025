@@ -10,6 +10,8 @@ import {
 } from "../earth/globe.js";
 
 function animate() {
+    const offset = -0.05;
+
     requestAnimationFrame(animate);
     controls.update();
 
@@ -21,13 +23,16 @@ function animate() {
         earthGroup.rotation.y += guiControls.rotationSpeed * 0.01;
     }
 
-    const baseSun = new THREE.Vector3(1, 1.2, 1);
+    const baseSun = new THREE.Vector3(1, 0.5, 1).normalize();
     const combinedRotation = earthGroup.rotation.y + guiControls.sunRotation;
     const rotatedSun = baseSun
         .clone()
         .applyAxisAngle(new THREE.Vector3(0, 1, 0), -combinedRotation);
-    globeMaterial.uniforms.lightDirection.value.copy(rotatedSun.normalize());
-    sunLight.position.copy(rotatedSun.multiplyScalar(10));
+
+    globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
+    atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
+
+    sunLight.position.copy(rotatedSun.multiplyScalar(20));
 
     flights.forEach((flight) => {
         if (!flight.visible) return;
@@ -43,7 +48,14 @@ function animate() {
             frame.tangent,
             frame.normal
         );
+
+        const adjustedPoint = frame.point
+            .clone()
+            .addScaledVector(frame.normal, offset);
+        flight.plane.position.copy(adjustedPoint);
         flight.plane.setRotationFromMatrix(matrix);
+        flight.plane.rotateZ(-Math.PI / 2);
+        flight.plane.rotateX(Math.PI / 2);
     });
     clouds.rotation.y += 0.0003;
 

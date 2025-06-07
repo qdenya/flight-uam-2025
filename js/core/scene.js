@@ -8,7 +8,7 @@ const camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    2000
 );
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -22,6 +22,10 @@ controls.enablePan = true;
 const sunLight = new THREE.DirectionalLight(0xffffff, 3);
 sunLight.position.set(10, 10, 10);
 scene.add(sunLight);
+
+// Добавляем более мягкое фоновое освещение
+const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+scene.add(ambientLight);
 
 function updateCameraPosition() {
     const width = window.innerWidth;

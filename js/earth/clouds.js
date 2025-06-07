@@ -9,7 +9,7 @@ export function createClouds(
     const material = new THREE.MeshLambertMaterial({
         map: cloudTexture,
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.6,
         depthWrite: false,
     });
 

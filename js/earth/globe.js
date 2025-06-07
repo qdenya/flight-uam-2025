@@ -19,7 +19,7 @@ const earthNormalTexture = textureLoader.load(
 );
 const earthRoughnessTexture = textureLoader.load(
     "assets/textures/earth_bump_roughness_clouds_4096.jpg"
-); 
+);
 
 const globeGeometry = new THREE.SphereGeometry(5, 64, 64);
 
@@ -37,7 +37,7 @@ export const globeMaterial = new THREE.ShaderMaterial({
         lightColor: { value: new THREE.Color(1.0, 0.95, 0.85) },
         saturation: { value: 1.2 },
         contrast: { value: 1.6 },
-        colorBoost: { value: new THREE.Vector3(1.1, 1.2, 1.3) },
+        colorBoost: { value: new THREE.Vector3(0.6, 0.6, 0.7) },
     },
     vertexShader: `
       varying vec2 vUv;
