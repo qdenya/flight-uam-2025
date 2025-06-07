@@ -15,9 +15,9 @@ function animate() {
     requestAnimationFrame(animate);
     controls.update();
 
-    atmosphere.material.uniforms.lightDirection.value.copy(
-        globeMaterial.uniforms.lightDirection.value
-    );
+    // atmosphere.material.uniforms.lightDirection.value.copy(
+    //     globeMaterial.uniforms.lightDirection.value
+    // );
 
     if (guiControls.autoRotate) {
         earthGroup.rotation.y += guiControls.rotationSpeed * 0.01;
@@ -29,8 +29,8 @@ function animate() {
         .clone()
         .applyAxisAngle(new THREE.Vector3(0, 1, 0), -combinedRotation);
 
-    globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
-    atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
+    // globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
+    // atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
 
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
 

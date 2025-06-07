@@ -23,17 +23,17 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = true;
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 30.5);
-sunLight.position.set(10, 20, 10);
+const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
+sunLight.position.set(1, 2, 1);
 sunLight.castShadow = true;
-sunLight.shadow.mapSize.width = 4096;
-sunLight.shadow.mapSize.height = 4096;
-sunLight.shadow.bias = -0.0005;
-sunLight.shadow.normalBias = 0.01;
-sunLight.shadow.camera.left = -50;
-sunLight.shadow.camera.right = 50;
-sunLight.shadow.camera.top = 50;
-sunLight.shadow.camera.bottom = -50;
+sunLight.shadow.mapSize.width = 2512;
+sunLight.shadow.mapSize.height = 2512;
+sunLight.shadow.camera.near = 2.5;
+sunLight.shadow.camera.far = 10000;
+sunLight.shadow.camera.left = -10;
+sunLight.shadow.camera.bottom = -10;
+sunLight.shadow.camera.top = 10;
+sunLight.shadow.camera.right = 10;
 scene.add(sunLight);
 
 const debugCamera = new THREE.CameraHelper(sunLight.shadow.camera);
