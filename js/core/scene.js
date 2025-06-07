@@ -10,8 +10,12 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     2000
 );
+
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.physicallyCorrectLights = true;
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -19,11 +23,20 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.enablePan = true;
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 3);
-sunLight.position.set(10, 10, 10);
+const sunLight = new THREE.DirectionalLight(0xffffff, 30.5);
+sunLight.position.set(10, 20, 10);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.width = 4096;
+sunLight.shadow.mapSize.height = 4096;
+sunLight.shadow.bias = -0.0005;
+sunLight.shadow.normalBias = 0.01;
+sunLight.shadow.camera.left = -50;
+sunLight.shadow.camera.right = 50;
+sunLight.shadow.camera.top = 50;
+sunLight.shadow.camera.bottom = -50;
 scene.add(sunLight);
 
-// Добавляем более мягкое фоновое освещение
+const debugCamera = new THREE.CameraHelper(sunLight.shadow.camera);
 const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
 scene.add(ambientLight);
 
@@ -56,4 +69,7 @@ updateCameraPosition();
 //     updateCameraPosition();
 // });
 
-export { scene, camera, renderer, controls, sunLight };
+
+
+
+export { scene, camera, renderer, controls, sunLight, debugCamera };

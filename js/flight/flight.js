@@ -58,7 +58,8 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
 
     loadPlaneModel((model) => {
         const plane = model.clone();
-
+        plane.castShadow = true;
+        plane.receiveShadow = false;
         earthGroup.add(plane);
         flight.plane = plane;
     });

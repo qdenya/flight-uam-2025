@@ -2,6 +2,11 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 
 const loader = new GLTFLoader();
+const textureLoader = new THREE.TextureLoader();
+
+const trailTexture = textureLoader.load(
+    "assets/model/mask.png"
+);
 
 export function loadPlaneModel(callback) {
     loader.load(
@@ -9,7 +14,46 @@ export function loadPlaneModel(callback) {
         (gltf) => {
             const model = gltf.scene;
             model.scale.set(0.0001, 0.0001, 0.0001);
-            callback(model);
+            
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                    if (child.material) {
+                        child.material.shadowSide = THREE.FrontSide;
+                    }
+                }
+            });
+
+            const trail = new THREE.Mesh(
+                new THREE.PlaneGeometry(0.3, 0.2),
+                new THREE.MeshPhysicalMaterial({
+                    envMapIntensity: 3,
+                    roughness: 0.4,
+                    metalness: 0,
+                    transmission: 1,
+                    transparent: true,
+                    opacity: 0.4,
+                    alphaMap: trailTexture,
+                    side: THREE.DoubleSide,
+                })
+            );
+            
+            trail.rotateX(Math.PI / 2); 
+            trail.rotateZ(Math.PI); 
+            trail.position.x = 0.17; 
+            trail.position.y = 0.1;
+            
+            const group = new THREE.Group();
+            group.add(model);
+            group.add(trail);
+            
+            group.updateTrail = function(position, rotation) {
+                trail.position.copy(position);
+                trail.quaternion.copy(rotation);
+            };
+
+            callback(group);
         },
         undefined,
         (error) => {

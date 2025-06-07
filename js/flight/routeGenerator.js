@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 function generateIntermediatePoints(fromVec, toVec, numPoints = 3) {
     const points = [];
-    const baseRadius = 5.05;
+    const baseRadius = 5.02;
     
     points.push(fromVec.clone());
     
@@ -11,10 +11,10 @@ function generateIntermediatePoints(fromVec, toVec, numPoints = 3) {
 
         const intermediatePoint = fromVec.clone().lerp(toVec, t);
         
-        const heightVariation = Math.floor(Math.random() * 0) + 0.15; 
+        const heightVariation = Math.floor(Math.random() * 0) + 0.05;
         intermediatePoint.normalize().multiplyScalar(baseRadius + heightVariation);
 
-        const sideVariation = Math.floor(Math.random() * 0) + 0.005; 
+        const sideVariation = Math.floor(Math.random() * 0) + 0.005;
         const rotationAxis = new THREE.Vector3().crossVectors(fromVec, toVec).normalize();
         intermediatePoint.applyAxisAngle(rotationAxis, sideVariation);
         
