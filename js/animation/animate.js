@@ -29,9 +29,7 @@ function animate() {
         .clone()
         .applyAxisAngle(new THREE.Vector3(0, 1, 0), -combinedRotation);
 
-    // globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
-    // atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
-
+    globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
 
     flights.forEach((flight) => {
