@@ -8,6 +8,7 @@ import {
     atmosphere,
     clouds,
 } from "../earth/globe.js";
+import { airportsManager } from "../airports/airports.js";
 
 function animate() {
     const offset = -0.05;
@@ -31,6 +32,33 @@ function animate() {
 
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
+
+    // Обновляем позиции точек аэропортов
+    if (airportsManager.points) {
+        const points = airportsManager.points.children[0];
+        const positions = points.geometry.attributes.position.array;
+        const originalPositions = points.geometry.attributes.originalPosition.array;
+        
+        for (let i = 0; i < positions.length; i += 3) {
+            const originalPos = new THREE.Vector3(
+                originalPositions[i],
+                originalPositions[i + 1],
+                originalPositions[i + 2]
+            );
+            
+            // Применяем поворот глобуса к каждой точке
+            const rotatedPos = originalPos.clone().applyAxisAngle(
+                new THREE.Vector3(0, 1, 0),
+                earthGroup.rotation.y
+            );
+            
+            positions[i] = rotatedPos.x;
+            positions[i + 1] = rotatedPos.y;
+            positions[i + 2] = rotatedPos.z;
+        }
+        
+        points.geometry.attributes.position.needsUpdate = true;
+    }
 
     flights.forEach((flight) => {
         if (!flight.visible) return;

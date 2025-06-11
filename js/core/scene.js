@@ -47,7 +47,6 @@ function updateCameraPosition() {
         camera.position.set(0, 15, 20);
         controls.minDistance = 8;
         controls.maxDistance = 15;
-
         scene.position.y = -4;
     } else if (width <= 1024) {
         camera.position.set(0, 10, 20);
@@ -62,14 +61,11 @@ function updateCameraPosition() {
 
 updateCameraPosition();
 
-// window.addEventListener('resize', () => {
-//     camera.aspect = window.innerWidth / window.innerHeight;
-//     camera.updateProjectionMatrix();
-//     renderer.setSize(window.innerWidth, window.innerHeight);
-//     updateCameraPosition();
-// });
-
-
-
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    updateCameraPosition();
+});
 
 export { scene, camera, renderer, controls, sunLight, debugCamera };
