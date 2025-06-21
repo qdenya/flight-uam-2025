@@ -33,7 +33,6 @@ function animate() {
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
 
-    // Обновляем позиции точек аэропортов
     if (airportsManager.points) {
         const points = airportsManager.points.children[0];
         const positions = points.geometry.attributes.position.array;
@@ -45,8 +44,7 @@ function animate() {
                 originalPositions[i + 1],
                 originalPositions[i + 2]
             );
-            
-            // Применяем поворот глобуса к каждой точке
+
             const rotatedPos = originalPos.clone().applyAxisAngle(
                 new THREE.Vector3(0, 1, 0),
                 earthGroup.rotation.y
