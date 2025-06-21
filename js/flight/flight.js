@@ -13,7 +13,7 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
         customPoints || generateIntermediatePoints(fromVec, toVec, 10);
     const curve = createCurveFromPoints(routePoints);
 
-    const tube = new THREE.TubeGeometry(curve, 100, 0.02, 8, false);
+    const tube = new THREE.TubeGeometry(curve, 50, 0.003, 6, false);
     const material = new THREE.MeshBasicMaterial({ color });
     const tubeMesh = new THREE.Mesh(tube, material);
     earthGroup.add(tubeMesh);
@@ -58,6 +58,7 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
 
     loadPlaneModel((model) => {
         const plane = model.clone();
+        plane.scale.set(0.3, 0.3, 0.3);
         plane.castShadow = true;
         plane.receiveShadow = false;
         earthGroup.add(plane);
@@ -67,4 +68,25 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
     return flight;
 }
 
-export { createFlight, flights };
+function clearAllFlights() {
+    flights.forEach(flight => {
+        // Удаляем трубку маршрута
+        if (flight.tube) {
+            earthGroup.remove(flight.tube);
+            flight.tube.geometry.dispose();
+            flight.tube.material.dispose();
+        }
+        
+        // Удаляем самолёт
+        if (flight.plane) {
+            earthGroup.remove(flight.plane);
+        }
+    });
+    
+    // Очищаем массив
+    flights.length = 0;
+    
+    console.log('All flights cleared');
+}
+
+export { createFlight, flights, clearAllFlights };

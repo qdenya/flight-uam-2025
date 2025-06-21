@@ -82,7 +82,7 @@ class AirportsManager {
     geometry.setAttribute('originalPosition', new THREE.BufferAttribute(originalPositions, 3));
 
     const material = new THREE.PointsMaterial({
-      size: 0.05,
+      size: 0.03,
       vertexColors: true,
       sizeAttenuation: true,
       transparent: true,

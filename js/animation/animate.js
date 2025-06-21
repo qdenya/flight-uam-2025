@@ -11,7 +11,7 @@ import {
 import { airportsManager } from "../airports/airports.js";
 
 function animate() {
-    const offset = -0.05;
+    const offset = -0.01; // Adjust this value to move the planes slightly below the surface
 
     requestAnimationFrame(animate);
     controls.update();
@@ -32,6 +32,11 @@ function animate() {
 
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
+
+    // Обновляем освещение атмосферы
+    if (atmosphere && atmosphere.material) {
+        atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
+    }
 
     if (airportsManager.points) {
         const points = airportsManager.points.children[0];

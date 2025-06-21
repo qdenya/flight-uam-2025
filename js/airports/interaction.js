@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 import { camera, renderer, scene } from '../core/scene.js';
 import { airportsManager } from './airports.js';
+import { getFlights } from '../api/airportsApi.js';
+import { latLonToVec3 } from '../earth/latlon.js';
+import { createFlight, clearAllFlights } from '../flight/flight.js';
+import { loaderManager } from '../ui/loader.js';
 
 console.log('Initializing airport interaction...');
 
@@ -62,7 +66,7 @@ function onMouseMove(event) {
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
-
+    
     raycaster.params.Points.threshold = 0.1;
 
     const points = airportsManager.points.children[0];
@@ -103,13 +107,14 @@ function onMouseMove(event) {
             
             infoDiv.style.left = `${x}px`;
             infoDiv.style.top = `${y}px`;
-
+            
             infoDiv.innerHTML = `
                 <strong>${airport.nameAirport}</strong><br>
                 IATA: ${airport.codeIataAirport || 'N/A'}<br>
-                Country: ${airport.nameCountry}<br>
-                Location: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
-                Timezone: ${airport.timezone || 'N/A'}
+                Kraj: ${airport.nameCountry}<br>
+                Lokalizacja: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
+                Strefa czasowa: ${airport.timezone || 'N/A'}<br>
+                <em style="color: #aaa; font-size: 12px;">Kliknij dwukrotnie, aby wyświetlić loty</em>
             `;
 
             if (hoveredIndex !== index) {
@@ -136,7 +141,7 @@ function onMouseMove(event) {
         }
     } else {
         infoDiv.style.display = 'none';
-
+        
         if (hoveredIndex !== null && originalColors) {
             const colors = points.geometry.attributes.color.array;
             colors[hoveredIndex * 3] = originalColors[hoveredIndex * 3];
@@ -149,7 +154,84 @@ function onMouseMove(event) {
     }
 }
 
-window.addEventListener('mousemove', onMouseMove);
-console.log('Mouse move event listener added');
+function onAirportClick(event) {
+    if (!airportsManager.points) return;
 
-export { onMouseMove }; 
+    const mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+    raycaster.params.Points.threshold = 0.1;
+
+    const points = airportsManager.points.children[0];
+    const intersects = raycaster.intersectObject(points);
+
+    if (intersects.length > 0) {
+        const intersect = intersects[0];
+        const index = intersect.index;
+        const airport = airportsManager.getAirportData(index);
+        if (!airport || !airport.codeIataAirport) return;
+
+        // Проверяем видимость точки (как в onMouseMove)
+        const pointPosition = new THREE.Vector3();
+        pointPosition.fromBufferAttribute(points.geometry.attributes.position, index);
+
+        if (!isPointVisible(pointPosition, camera)) {
+            console.log('Clicked on invisible airport, ignoring');
+            return;
+        }
+
+        clearAllFlights();
+
+        console.log('Loading flights for airport:', airport.nameAirport, '(', airport.codeIataAirport, ')');
+
+        loaderManager.setText(`Ładowanie lotów z ${airport.nameAirport}...`);
+        loaderManager.show();
+
+        getFlights(airport.codeIataAirport).then(routes => {
+            if (!Array.isArray(routes)) {
+                loaderManager.hide();
+                return;
+            }
+            
+            const uniqueRoutes = new Map();
+            
+            routes.forEach(route => {
+                const routeKey = `${route.departureIata}-${route.arrivalIata}`;
+                
+                if (!uniqueRoutes.has(routeKey)) {
+                    uniqueRoutes.set(routeKey, route);
+                }
+            });
+            
+            console.log(`Found ${routes.length} total routes, showing ${uniqueRoutes.size} unique routes`);
+            
+            uniqueRoutes.forEach(route => {
+                const fromAirport = airport;
+                const toAirport = airportsManager.airportsData.find(a => a.codeIataAirport === route.arrivalIata);
+                if (!toAirport) return;
+                
+                const fromVec = latLonToVec3(fromAirport.latitudeAirport, fromAirport.longitudeAirport, 5.05);
+                const toVec = latLonToVec3(toAirport.latitudeAirport, toAirport.longitudeAirport, 5.05);
+
+                createFlight(fromVec, toVec);
+            });
+
+            loaderManager.hide();
+        }).catch(error => {
+            console.error('Error loading flights:', error);
+            loaderManager.setText('Ошибка загрузки рейсов');
+            setTimeout(() => {
+                loaderManager.hide();
+            }, 2000);
+        });
+    }
+}
+
+window.addEventListener('mousemove', onMouseMove);
+window.addEventListener('dblclick', onAirportClick);
+console.log('Mouse move and double-click event listeners added');
+
+export { onMouseMove, onAirportClick }; 
