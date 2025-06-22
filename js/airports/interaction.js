@@ -174,7 +174,6 @@ function onAirportClick(event) {
         const airport = airportsManager.getAirportData(index);
         if (!airport || !airport.codeIataAirport) return;
 
-        // Проверяем видимость точки (как в onMouseMove)
         const pointPosition = new THREE.Vector3();
         pointPosition.fromBufferAttribute(points.geometry.attributes.position, index);
 

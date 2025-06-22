@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { scene, camera, debugCamera } from "../core/scene.js";
 import { flights } from "../flight/flight.js";
 import { cityMarkers } from "../earth/latlon.js";
+import { airportsManager } from "../airports/airports.js";
 
 class Controls {
     constructor() {
@@ -37,8 +38,8 @@ mainFolder
         camera.position.z = value;
     });
 
-mainFolder.add(controls, "rotationSpeed", 0, 2).name("Prędkość obrotu");
-mainFolder.add(controls, "autoRotate").name("Auto obrót");
+// mainFolder.add(controls, "rotationSpeed", 0, 2).name("Prędkość obrotu");
+// mainFolder.add(controls, "autoRotate").name("Auto obrót");
 mainFolder
     .add(controls, "sunRotation", -Math.PI, Math.PI)
     .name("Pozycja Słońca");
@@ -51,6 +52,9 @@ displayFolder
         cityMarkers.forEach((marker) => {
             marker.visible = value;
         });
+        if (airportsManager.points) {
+            airportsManager.points.visible = value;
+        }
     });
 
 displayFolder

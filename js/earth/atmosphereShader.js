@@ -37,7 +37,6 @@ export function createAtmosphere() {
                 float rim = 1.0 - max(dot(viewDir, normal), 0.0);
                 float glow = pow(rim, 3.5);
                 
-                // Комбинируем эффекты
                 float finalGlow = glow * (0.1 + 0.5 * sunInfluence);
                 
                 vec3 finalColor = atmosphereColor * finalGlow * intensity;

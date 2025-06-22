@@ -70,20 +70,17 @@ function createFlight(fromVec, toVec, color = 0xffff00, customPoints = null) {
 
 function clearAllFlights() {
     flights.forEach(flight => {
-        // Удаляем трубку маршрута
         if (flight.tube) {
             earthGroup.remove(flight.tube);
             flight.tube.geometry.dispose();
             flight.tube.material.dispose();
         }
         
-        // Удаляем самолёт
         if (flight.plane) {
             earthGroup.remove(flight.plane);
         }
     });
     
-    // Очищаем массив
     flights.length = 0;
     
     console.log('All flights cleared');

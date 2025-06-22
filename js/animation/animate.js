@@ -11,7 +11,7 @@ import {
 import { airportsManager } from "../airports/airports.js";
 
 function animate() {
-    const offset = -0.01; // Adjust this value to move the planes slightly below the surface
+    const offset = -0.01; 
 
     requestAnimationFrame(animate);
     controls.update();
@@ -33,34 +33,8 @@ function animate() {
     globeMaterial.uniforms.lightDirection.value.copy(rotatedSun);
     sunLight.position.copy(rotatedSun.multiplyScalar(20));
 
-    // Обновляем освещение атмосферы
     if (atmosphere && atmosphere.material) {
         atmosphere.material.uniforms.lightDirection.value.copy(rotatedSun);
-    }
-
-    if (airportsManager.points) {
-        const points = airportsManager.points.children[0];
-        const positions = points.geometry.attributes.position.array;
-        const originalPositions = points.geometry.attributes.originalPosition.array;
-        
-        for (let i = 0; i < positions.length; i += 3) {
-            const originalPos = new THREE.Vector3(
-                originalPositions[i],
-                originalPositions[i + 1],
-                originalPositions[i + 2]
-            );
-
-            const rotatedPos = originalPos.clone().applyAxisAngle(
-                new THREE.Vector3(0, 1, 0),
-                earthGroup.rotation.y
-            );
-            
-            positions[i] = rotatedPos.x;
-            positions[i + 1] = rotatedPos.y;
-            positions[i + 2] = rotatedPos.z;
-        }
-        
-        points.geometry.attributes.position.needsUpdate = true;
     }
 
     flights.forEach((flight) => {
