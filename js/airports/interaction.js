@@ -32,6 +32,22 @@ document.body.appendChild(infoDiv);
 
 console.log('Info div created and added to document');
 
+const infoMsg = document.createElement('div');
+infoMsg.style.position = 'fixed';
+infoMsg.style.right = '32px';
+infoMsg.style.bottom = '32px';
+infoMsg.style.transform = 'none';
+infoMsg.style.color = 'white';
+infoMsg.style.fontSize = '16px';
+infoMsg.style.background = 'rgba(220, 0, 0, 0.92)';
+infoMsg.style.padding = '10px 18px';
+infoMsg.style.borderRadius = '8px';
+infoMsg.style.zIndex = '10001';
+infoMsg.style.display = 'none';
+infoMsg.style.boxShadow = '0 2px 12px rgba(0,0,0,0.18)';
+infoMsg.style.transition = 'opacity 0.3s';
+document.body.appendChild(infoMsg);
+
 function isPointVisible(pointPosition, camera) {
     const cameraToPoint = pointPosition.clone().sub(camera.position).normalize();
     const sphereNormal = pointPosition.clone().normalize();
@@ -190,8 +206,9 @@ function onAirportClick(event) {
         loaderManager.show();
 
         getFlights(airport.codeIataAirport).then(routes => {
-            if (!Array.isArray(routes)) {
+            if (!Array.isArray(routes) || routes.success === false || routes.error) {
                 loaderManager.hide();
+                showInfoMsg('Brak lotów dla wybranego lotniska');
                 return;
             }
             
@@ -206,6 +223,10 @@ function onAirportClick(event) {
             });
             
             console.log(`Found ${routes.length} total routes, showing ${uniqueRoutes.size} unique routes`);
+            
+            if (uniqueRoutes.size === 0) {
+                showInfoMsg('Brak lotów dla wybranego lotniska');
+            }
             
             uniqueRoutes.forEach(route => {
                 const fromAirport = airport;
@@ -229,8 +250,44 @@ function onAirportClick(event) {
     }
 }
 
+function showAirportInfo(airport) {
+    if (!airport) return;
+    infoDiv.style.display = 'block';
+    infoDiv.style.left = '50vw';
+    infoDiv.style.top = '20vh';
+    infoDiv.innerHTML = `
+        <strong>${airport.nameAirport}</strong><br>
+        IATA: ${airport.codeIataAirport || 'N/A'}<br>
+        Kraj: ${airport.nameCountry}<br>
+        Lokalizacja: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
+        Strefa czasowa: ${airport.timezone || 'N/A'}<br>
+        <em style="color: #aaa; font-size: 12px;">Kliknij dwukrotnie, aby wyświetlić loty</em>
+    `;
+}
+
+function showInfoMsg(msg) {
+    infoMsg.textContent = msg;
+    infoMsg.style.display = 'block';
+    infoMsg.style.opacity = '1';
+    setTimeout(() => {
+        infoMsg.style.opacity = '0';
+        setTimeout(() => { infoMsg.style.display = 'none'; }, 300);
+    }, 3000);
+}
+
 window.addEventListener('mousemove', onMouseMove);
 window.addEventListener('dblclick', onAirportClick);
-console.log('Mouse move and double-click event listeners added');
+// window.addEventListener('touchstart', function(event) {
+//     if (event.touches.length === 1) {
 
-export { onMouseMove, onAirportClick }; 
+//         const touch = event.touches[0];
+//         const fakeEvent = {
+//             clientX: touch.clientX,
+//             clientY: touch.clientY
+//         };
+//         onAirportClick(fakeEvent);
+//     }
+// });
+// console.log('Mouse move, double-click, and touch event listeners added');
+
+export { onMouseMove, onAirportClick, showAirportInfo, showInfoMsg }; 
