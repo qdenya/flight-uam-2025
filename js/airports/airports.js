@@ -41,9 +41,15 @@ class AirportsManager {
     
     data.forEach(airport => {
 
-      // Pomijanie stacji kolejowych
-      if (airport.nameAirport && airport.nameAirport.toLowerCase().includes('railway')) {
-      return;
+      // Pomijanie stacji kolejowych i autobusowych
+      if (
+        airport.nameAirport &&
+        (
+          airport.nameAirport.toLowerCase().includes('railway') ||
+          airport.nameAirport.toLowerCase().includes('bus')
+        )
+      ) {
+        return;
       }
 
       if (!Number.isFinite(airport.latitudeAirport) ||
