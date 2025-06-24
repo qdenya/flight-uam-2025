@@ -40,6 +40,12 @@ class AirportsManager {
     const uniqueAirports = new Map();
     
     data.forEach(airport => {
+
+      // Pomijanie stacji kolejowych
+      if (airport.nameAirport && airport.nameAirport.toLowerCase().includes('railway')) {
+      return;
+      }
+
       if (!Number.isFinite(airport.latitudeAirport) ||
         !Number.isFinite(airport.longitudeAirport) ||
         airport.latitudeAirport < -90 || airport.latitudeAirport > 90 ||
