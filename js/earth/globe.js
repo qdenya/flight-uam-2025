@@ -41,7 +41,9 @@ export const globeMaterial = new THREE.ShaderMaterial({
         roughnessMap: { value: earthRoughnessTexture },
         lightDirection: { value: new THREE.Vector3(1, 1, 1).normalize() },
         roughness: { value: 0.4 },
-        metalness: { value: 0.3 }
+        metalness: { value: 0.3 },
+        specularStrength: { value: 0.5 },
+        shininess: { value: 184.0 }
     },
     vertexShader: `
         varying vec2 vUv;
@@ -55,7 +57,6 @@ export const globeMaterial = new THREE.ShaderMaterial({
             vec3 pos = (modelViewMatrix * vec4(position, 1.0)).xyz;
             vViewPosition = -pos;
             
-            // Tangent space approximation
             vec3 tangent = normalize(vec3(1.0, 0.0, 0.0));
             vec3 bitangent = normalize(cross(normal, tangent));
             vTBN = mat3(tangent, bitangent, normal);
@@ -71,6 +72,8 @@ export const globeMaterial = new THREE.ShaderMaterial({
         uniform vec3 lightDirection;
         uniform float roughness;
         uniform float metalness;
+        uniform float specularStrength;
+        uniform float shininess;
         
         varying vec2 vUv;
         varying vec3 vNormal;
@@ -86,13 +89,20 @@ export const globeMaterial = new THREE.ShaderMaterial({
             
             vec4 dayColor = texture2D(dayMap, vUv);
             vec4 nightColor = texture2D(nightMap, vUv);
-            
-            // Smooth transition between day and night
+
             float transition = smoothstep(0.0, 0.3, NdotL);
             vec3 finalColor = mix(nightColor.rgb, dayColor.rgb, transition);
             
             // Add some ambient light to prevent complete darkness
             finalColor += nightColor.rgb * 0.1;
+            
+            vec3 viewDir = normalize(vViewPosition);
+            vec3 lightDir = normalize(lightDirection);
+            vec3 halfDir = normalize(lightDir + viewDir);
+            float spec = pow(max(dot(normal, halfDir), 0.0), shininess);
+
+            spec *= step(0.01, NdotL);
+            finalColor += specularStrength * spec * vec3(1.0, 0.95, 0.8);
             
             gl_FragColor = vec4(finalColor, 1.0);
         }

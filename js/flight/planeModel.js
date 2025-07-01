@@ -1,5 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
+import { scene } from "../core/scene.js";
 
 const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
@@ -19,15 +20,22 @@ export function loadPlaneModel(callback) {
                 if (child.isMesh) {
                     child.castShadow = true;
                     child.receiveShadow = true;
-                    if (child.material) {
-                        child.material.shadowSide = THREE.FrontSide;
-                    }
+                    child.material = new THREE.MeshPhysicalMaterial({
+                        color: 0xffffff,
+                        metalness: 0.7,
+                        roughness: 0.2,
+                        envMap: scene.environment || null,
+                        envMapIntensity: 1.2,
+                        clearcoat: 0.3,
+                        transparent: false
+                    });
                 }
             });
 
             const trail = new THREE.Mesh(
                 new THREE.PlaneGeometry(0.3, 0.2),
                 new THREE.MeshPhysicalMaterial({
+                    envMap: scene.environment || null,
                     envMapIntensity: 3,
                     roughness: 0.4,
                     metalness: 0,

@@ -3,7 +3,9 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createSkybox } from "./skybox.js";
 
 const scene = new THREE.Scene();
-scene.background = createSkybox();
+const skyboxTexture = createSkybox();
+scene.background = skyboxTexture;
+scene.environment = skyboxTexture;
 const camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
