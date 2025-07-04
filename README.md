@@ -22,6 +22,9 @@ Aplikacja edukacyjna 3D, która wizualizuje bezpośrednie połączenia lotnicze 
 
 - Node.js i npm
 
+![Ekran główny](image1.jpg)
+![Ekran z lotami](image2.jpg)
+
 ### Instalacja i uruchomienie
 
 ```bash
@@ -30,3 +33,4 @@ npm install
 
 # Uruchom
 npx vite
+
