@@ -162,7 +162,8 @@ setTimeout(() => {
 
         const results = airportsManager.airportsData.filter(a =>
             (a.codeIataAirport && a.codeIataAirport.toLowerCase().includes(value)) ||
-            (a.nameAirport && a.nameAirport.toLowerCase().includes(value))
+            (a.nameAirport && a.nameAirport.toLowerCase().includes(value)) ||
+            (a.nameCountry && a.nameCountry.toLowerCase().includes(value))
         ).slice(0, 20);
         lastResults = results;
         showDropdown(results);
