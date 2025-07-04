@@ -127,10 +127,10 @@ function onMouseMove(event) {
             infoDiv.innerHTML = `
                 <strong>${airport.nameAirport}</strong><br>
                 IATA: ${airport.codeIataAirport || 'N/A'}<br>
-                Kraj: ${airport.nameCountry}<br>
-                Lokalizacja: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
-                Strefa czasowa: ${airport.timezone || 'N/A'}<br>
-                <em style="color: #aaa; font-size: 12px;">Kliknij dwukrotnie, aby wyświetlić loty</em>
+                Страна: ${airport.nameCountry}<br>
+                Положение: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
+                Часовой пояс: ${airport.timezone || 'N/A'}<br>
+                <em style="color: #aaa; font-size: 12px;">Нажми дважды чтобы отобразить полеты</em>
             `;
 
             if (hoveredIndex !== index) {
@@ -258,10 +258,10 @@ function showAirportInfo(airport) {
     infoDiv.innerHTML = `
         <strong>${airport.nameAirport}</strong><br>
         IATA: ${airport.codeIataAirport || 'N/A'}<br>
-        Kraj: ${airport.nameCountry}<br>
-        Lokalizacja: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
-        Strefa czasowa: ${airport.timezone || 'N/A'}<br>
-        <em style="color: #aaa; font-size: 12px;">Kliknij dwukrotnie, aby wyświetlić loty</em>
+        Страна: ${airport.nameCountry}<br>
+        Положение: ${airport.latitudeAirport.toFixed(2)}°, ${airport.longitudeAirport.toFixed(2)}°<br>
+        Часовой пояс: ${airport.timezone || 'N/A'}<br>
+        <em style="color: #aaa; font-size: 12px;">Нажми дважды чтобы показать полёты</em>
     `;
 }
 

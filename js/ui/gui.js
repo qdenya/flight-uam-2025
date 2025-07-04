@@ -27,10 +27,10 @@ class Controls {
 const controls = new Controls();
 const gui = new GUI();
 
-const mainFolder = gui.addFolder("Ustawienia główne");
+const mainFolder = gui.addFolder("Основные настройки");
 mainFolder
     .add(controls, "flightSpeed", 0.001, 0.01)
-    .name("Prędkość lotu")
+    .name("Скорость полёта")
     .onChange((value) => {
         flights.forEach((flight) => {
             flight.speed = value;
@@ -39,7 +39,7 @@ mainFolder
 
 mainFolder
     .add(controls, "cameraDistance", 6, 50)
-    .name("Odległość kamery")
+    .name("Расстояние камеры")
     .onChange((value) => {
         camera.position.z = value;
     });
@@ -48,12 +48,12 @@ mainFolder
 // mainFolder.add(controls, "autoRotate").name("Auto obrót");
 mainFolder
     .add(controls, "sunRotation", -Math.PI, Math.PI)
-    .name("Pozycja Słońca");
+    .name("Поворот солнца");
 
-const displayFolder = gui.addFolder("Wyświetlanie");
+const displayFolder = gui.addFolder("Отображение");
 displayFolder
     .add(controls, "showCities")
-    .name("Pokaż miasta")
+    .name("Включить города")
     .onChange((value) => {
         cityMarkers.forEach((marker) => {
             marker.visible = value;
@@ -65,7 +65,7 @@ displayFolder
 
 displayFolder
     .add(controls, "showFlights")
-    .name("Pokaż loty")
+    .name("Включить рейсы")
     .onChange((value) => {
         flights.forEach((flight) => {
             flight.visible = value;
@@ -76,7 +76,7 @@ displayFolder
 
 displayFolder
     .add(controls, "isDebugMode")
-    .name("Debug kamery")
+    .name("Дебаг-режим")
     .onChange((value) => {
         if (value) {
             scene.add(debugCamera);
@@ -103,7 +103,7 @@ setTimeout(() => {
 
     const input = document.createElement('input');
     input.type = 'text';
-    input.placeholder = 'Wyszukaj lotnisko';
+    input.placeholder = 'Поиск аэропорта';
     input.style.fontSize = '16px';
     input.style.padding = '4px 8px';
     input.style.borderRadius = '4px';
@@ -175,7 +175,7 @@ setTimeout(() => {
     });
 
     const btn = document.createElement('button');
-    btn.textContent = 'Pokaż loty';
+    btn.textContent = 'Показать рейсы';
     btn.style.fontSize = '16px';
     btn.style.padding = '4px 8px';
     btn.style.borderRadius = '4px';
@@ -194,13 +194,13 @@ setTimeout(() => {
         const airport = airportsManager.airportsData.find(a => a.codeIataAirport === selectedAirportIata);
         if (!airport) return;
         clearAllFlights();
-        loaderManager.setText(`Ładowanie lotów z ${airport.nameAirport}...`);
+        loaderManager.setText(`Загрузка полетов из ${airport.nameAirport}...`);
         loaderManager.show();
         try {
             const routes = await getFlights(airport.codeIataAirport);
             if (!Array.isArray(routes) || routes.success === false || routes.error) {
                 loaderManager.hide();
-                showInfoMsg('Brak lotów dla wybranego lotniska');
+                showInfoMsg('Для выбранного аэропорта нет рейсов');
                 return;
             }
             const uniqueRoutes = new Map();
@@ -211,7 +211,7 @@ setTimeout(() => {
                 }
             });
             if (uniqueRoutes.size === 0) {
-                showInfoMsg('Brak lotów dla wybranego lotniska');
+                showInfoMsg('Для выбранного аэропорта нет рейсов');
             }
             uniqueRoutes.forEach(route => {
                 const fromAirport = airport;
